@@ -1,7 +1,7 @@
 import syntaxJSXPlugin from 'babel-plugin-syntax-jsx';
 
-const NODE_BUILDER = '__vnode__',
-    CHILDREN_NORMALIZER = '__vnormalizer__';
+const NODE_BUILDER = 'vidom.node',
+    CHILDREN_NORMALIZER = 'vidom.normalizeChildren';
 
 export default function({ types }) {
     function buildNodeExpr(tagExpr) {
@@ -244,34 +244,8 @@ export default function({ types }) {
             },
 
             Program : {
-                enter : function() {
-                    requireNode = false;
-                    requireNormalizer = false;
-                },
-
-                exit : function(path) {
-                    if(!requireNode) {
-                        return;
-                    }
-
-                    path.node.body.unshift(
-                        types.variableDeclaration(
-                            'var',
-                            [
-                                types.variableDeclarator(
-                                    types.identifier(NODE_BUILDER),
-                                    types.memberExpression(
-                                        types.callExpression(types.identifier('require'), [types.stringLiteral('vidom')]),
-                                        types.identifier('node')))
-                            ].concat(requireNormalizer?
-                                types.variableDeclarator(
-                                    types.identifier(CHILDREN_NORMALIZER),
-                                    types.memberExpression(
-                                        types.callExpression(types.identifier('require'), [types.stringLiteral('vidom')]),
-                                        types.identifier('normalizeChildren'))) :
-                                []
-                            )));
-                }
+                enter : function() {},
+                exit : function(path) {}
             }
         }
     };
